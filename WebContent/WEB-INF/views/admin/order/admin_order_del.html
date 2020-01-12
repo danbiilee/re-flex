@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>re:flex</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet"> <!-- 부트스트랩 -->
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/header.js"></script>
+    
+</head>
+<body>
+    
+    <div class="container-fluid">
+        <div class="row"><p class="col-md-12"> <br><br><br><br></p></div>
+        <div class="row">
+            <p class="col-md-2"></p>
+            <h1 class="col-md-3">
+                배송관리
+            </h1> 
+        </div>
+    </div>
+
+    <!-- 배송관리 이미지 css -->
+    <style>
+    #order-del-img tr{
+        border: white solid;
+    }
+    #order-del-img td{
+        border: white solid;
+        text-align: center;
+        padding-right: 40px;
+    }
+    #order-del-img-tr{
+        color: red;
+    }
+    </style>
+    <!-- 배송관리 이미지 css 끝 -->
+
+    
+    <!-- 배송관리 이미지 -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-6">
+                <table id="order-del-img">
+                    <tr>
+                        <td><img src="images/order.PNG"></td>
+                        <td><img src="images/deling.PNG"></td>
+                        <td><img src="images/delstart.PNG"></td>
+                        <td><img src="images/delend.PNG"></td>
+                    </tr>
+                    <tr>
+                        <td>주문완료</td>
+                        <td>배송준비중</td>
+                        <td>배송중</td>
+                        <td>배송완료</td>
+                    </tr>
+                    <tr id="order-del-img-tr">
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <p class="col-md-12"><br></p>
+    </div>
+    <!-- 배송관리 이미지 끝 -->
+
+
+    <!-- 배송관리 검색창 -->
+    <div class="container-fluid">
+            <div class="row"><p class="col-md-12 col-xs-2"><br></p></div>
+        <div class="row">
+            <p class="col-md-4 col-xs-2">&nbsp;</p>
+            <!-- 배송검색창 폼 -->
+            <form id="order-form" class="form-inline">
+                <div class="form-group" id="order-form-div">
+                    <select class="form-control" id="order-form-select">
+                        <option value="회원 아이디" selected>회원 아이디</option>
+                        <option value="상품번호">상품번호</option>
+                        <option value="상품명">상품명</option>
+                    </select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" id="order-form-srch" placeholder="검색어를 입력하세요">
+                </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="btn btn-default" id="order-form-btn">검색</button>
+            </form>
+            <p class="col-md-12"><br><br><br></p>
+        </div>
+    </div>
+    <!-- 배송관리 검색창 끝-->
+
+
+ 
+
+    <!-- 배송현황 테이블 -->
+    <div class="container-fluid">
+        <div class="row">
+            <p class="col-md-2 col-xs-2 col-sm-4"></p>
+            <div class="col-md-8">
+                <table class="table" id="order-del-tbl">
+                    <thead>
+                        <tr>
+                            <th>주문번호</th>								
+                            <th>주문일</th>								
+                            <th>상품번호</th>								
+                            <th>주문상태</th>								
+                            <th>상품명</th>								
+                            <th>옵션</th>								
+                            <th>수량</th>								
+                            <th>상품주문금액</th>								
+                            <th>아이디</th>								
+                            <th> </th>								
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>51</td>								
+                            <td>20191202</td>								
+                            <td><a href="#">11445</a></td>	
+                            <td class="col-md-1">
+                                <select name="" id="">
+                                    <option value="주문완료">주문완료</option>
+                                    <option value="배송준비중">배송준비중</option>
+                                    <option value="배송중">배송중</option>
+                                    <option value="배송완료">배송완료</option>
+                                </select>
+                            </td>								
+                            <td><a href="#"> 유모차</a></td>								
+                            <td> 3개월</td>								
+                            <td> 1</td>								
+                            <td>34,000</td>								
+                            <td><a href="#">gkwls5865</a></td>								
+                            <td><button class="btn-xs btn-primary">수정</button></td>								
+                        </tr>
+                        <tr>
+                            <td>   52</td>								
+                            <td>  20191213</td>								
+                            <td><a href="#">12341</a></td>								
+                            <td class="col-md-1">
+                                <select name="" id="">
+                                        <option value="주문완료">주문완료</option>
+                                        <option value="배송준비중">배송준비중</option>
+                                        <option value="배송중">배송중</option>
+                                        <option value="배송완료">배송완료</option>
+                                </select>
+                            </td>								
+                            <td><a href="#"> 카메라</a></td>								
+                            <td> 7일월</td>								
+                            <td> 1</td>								
+                            <td>98,000</td>								
+                            <td><a href="#">worndi12</a></td>	
+                            <td><button class="btn-xs btn-primary">수정</button></td>								
+
+                        </tr>
+                        <tr>
+                            <td>   53</td>								
+                            <td>  20191214</td>								
+                            <td><a href="#">33218</a></td>								
+                            <td class="col-md-1">
+                                <select name="" id="">
+                                        <option value="주문완료">주문완료</option>
+                                        <option value="배송준비중">배송준비중</option>
+                                        <option value="배송중">배송중</option>
+                                        <option value="배송완료">배송완료</option>
+                                </select>
+                            </td>								
+                            <td><a href="#"> TV</a></td>								
+                            <td> 6개월</td>								
+                            <td> 1</td>								
+                            <td>1,233,000</td>								
+                            <td><a href="#">qowiba1224</a></td>		
+                            <td><button class="btn-xs btn-primary">수정</button></td>								
+
+                        </tr>
+                        <tr>
+                            <td>   54</td>								
+                            <td>  20191225</td>								
+                            <td><a href="#">23019</a></td>								
+                            <td class="col-md-1">
+                                <select name="" id="">
+                                        <option value="주문완료">주문완료</option>
+                                        <option value="배송준비중">배송준비중</option>
+                                        <option value="배송중">배송중</option>
+                                        <option value="배송완료">배송완료</option>
+                                </select>
+                            </td>								
+                            <td><a href="#"> 캐리어</a></td>								
+                            <td> 3개월</td>								
+                            <td> 1</td>								
+                            <td>128,000</td>								
+                            <td><a href="#">biitoq093</a></td>	
+                            <td><button class="btn-xs btn-primary">수정</button></td>								
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="col-md-2"></p>
+            <div class="col-md-12"><br><br><br></div>
+        </div>
+    </div> 
+    <!-- 배송현황 테이블 끝 -->
+     
+         
+   
+
+       
+
+
+
+       
+
+                 
+                   
+            
+
+
+</body>
+</html>

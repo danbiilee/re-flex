@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>re:flex</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet"> <!-- 부트스트랩 -->
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <script src="js/jquery-3.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/header.js"></script>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row"><p class="col-md-12"><br><br><br><br></p></div>
+        <div class="row">
+            <p class="col-md-2"></p>
+            <h1 class="col-md-3">
+                판매현황
+            </h1> 
+        </div>
+    </div>
+    
+    <!-- 판매기간 검색창 -->
+    <div class="container-fluid">
+        <div class="row"><p class="col-md-12"><br></p></div>
+        <div class="row">
+            <p class="col-md-4"></p>
+            <input style="margin-left: 90px;" type="date" value="2019">
+            <input type="date" value="2019">
+            <button style="margin-left: 15px;" type="submit" class="btn btn-default" id="order-sale-btn">검색</button>
+        </div>
+    </div>
+    <!-- 판매기간 검색창 끝 -->
+
+    <!-- 판매현황 테이블 css -->
+    <style>
+        #order-sale-tbl {
+          border-top: 1px solid #444444;
+          border-collapse: collapse;
+        }
+        #order-sale-tbl th, td {
+          border-bottom: 1px solid #444444;
+          padding: 10px;
+          text-align: center;
+        }
+    </style>
+          
+    <!-- 판매현황 테이블 -->
+    <div class="container-fluid">
+        <div class="row">
+            <p class="col-md-12 col-xs-2"><br><br><br></p>
+            <div class="row">
+                <p class="col-md-4"></p>
+                <h4 class="col-md-4">2019년 12월</h4>
+            </div>
+            <p class="col-md-4 col-xs-2"></p>
+            <table class="col-md-4 col-xs-2" id="order-sale-tbl">
+                <thead>
+                    <tr>
+                        <th>구분</th>								
+                        <th>결제완료/배송준비중</th>								
+                        <th>배송중/배송완료</th>								
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>판매가</td>								
+                        <td>3건 / 189,000</td>								
+                        <td>6건 / 1,889,200원</td>								
+                    </tr>
+                    <tr>
+                        <td>옵션비</td>								
+                        <td>1건 / 5000원</td>		
+                        <td>36건 / 23,000원</td>							
+                    </tr>
+                    <tr>
+                        <td>배송비</td>								
+                        <td>2건 / 5000원</td>	
+                        <td>2건 / 5000원</td>								
+                    </tr>
+                </tbody>
+            </table>
+            <p class="col-md-12"><br><br><br></p>
+        </div>
+        <div class="row">
+            <p class="col-md-4"></p>
+            <div class="row">
+                <h4 class="col-md-4">2019년 11월</h4>
+            </div>
+            <p class="col-md-4"></p>
+            <table class="col-md-4 col-xs-2" id="order-sale-tbl">
+                <thead>
+                    <tr>
+                        <th>구분</th>								
+                        <th>결제완료/배송준비중</th>								
+                        <th>배송중/배송완료</th>								
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>판매가</td>								
+                        <td>3건 / 189,000</td>								
+                        <td>6건 / 1,889,200원</td>								
+                    </tr>
+                    <tr>
+                        <td>옵션비</td>								
+                        <td>1건 / 5000원</td>		
+                        <td>36건 / 23,000원</td>							
+                    </tr>
+                    <tr>
+                        <td>배송비</td>								
+                        <td>2건 / 5000원</td>	
+                        <td>2건 / 5000원</td>								
+                    </tr>
+                </tbody>
+            </table>
+            <p class="col-md-12"><br><br><br></p>
+        </div>
+    </div> 
+    <!-- 판매현황 테이블 끝 -->
+
+
+</body>
+</html>
