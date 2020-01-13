@@ -107,5 +107,5 @@ public class Item implements Serializable{
 				+ itemBrand + ", itemName=" + itemName + ", itemPrice=" + itemPrice + ", itemDesc=" + itemDesc
 				+ ", itemEnrollDate=" + itemEnrollDate + "]";
 	}
-	
+
 }

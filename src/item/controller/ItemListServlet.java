@@ -40,7 +40,6 @@ public class ItemListServlet extends HttpServlet {
 		} catch(NumberFormatException e) {
 			
 		}
-		System.out.println("cPage@servlet="+cPage);
 		
 		ItemService itemService = new ItemService();
 		try {
@@ -94,7 +93,7 @@ public class ItemListServlet extends HttpServlet {
 			//뷰단처리
 			String view = "";
 			
-			//조회 성공
+			//조회 성공: 상품 없을 수 있음
 			if(itemList!=null) {
 				view = "/WEB-INF/views/item/itemList.jsp";
 				
