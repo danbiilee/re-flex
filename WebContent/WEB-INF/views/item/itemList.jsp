@@ -110,7 +110,7 @@ function setFilter(){
 		pageContext.setAttribute("imgList", imgList);
 		pageContext.setAttribute("discountedPrice", discountedPrice);
 %>
-		<div class="col-md-3">
+ 		<div class="col-md-3">
 		    <a href='<c:url value="/item/itemView?categoryNo=${categoryNo}&itemNo=${item.itemNo}"/>' class="center-block">
 		        <img src="<c:url value='/images/${categoryNo}/${imgList[0].itemImageRenamed}'/>" alt="item" class="center-block">
 		        <div class="ptext-wrapper">
@@ -128,7 +128,7 @@ function setFilter(){
 %>
 		<!-- 상품개수가 4의 배수가 아니면 부족한 만큼 빈 박스로 채움 -->
 		<c:if test="${fn:length(itemList)%4 != 0}">
-			<c:set var="plus" value="4-${fn:length(itemList)%4}" />
+			<c:set var="plus" value="${4-fn:length(itemList)%4}" />
 			<c:forEach var="i" begin="1" end="${plus}" step="1">
 				<div class="col-md-3"></div>
 			</c:forEach>
