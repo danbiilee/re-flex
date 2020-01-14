@@ -10,6 +10,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="filterType" value='${filterType==null?"":filterType}' />
 <%
+	System.out.println();
 	List<Item> itemList = (List<Item>)request.getAttribute("itemList");
 	List<Integer> itemNoList = (List<Integer>)request.getAttribute("itemNoList");
 	Map<Integer, List<ItemImage>> imgMap = (Map<Integer, List<ItemImage>>)request.getAttribute("imgMap");
