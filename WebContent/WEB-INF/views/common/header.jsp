@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-   <%@ page import="member.model.vo.*" %>
+<%@ page import="member.model.vo.*" %>
    
    <% 
    		//로그인한 경우

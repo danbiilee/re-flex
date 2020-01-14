@@ -8,20 +8,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="filterType" value='${filterType==null?"":filterType}' />
 <%
-	String categoryNo = (String)request.getAttribute("categoryNo");
-	String filterType = (String)request.getAttribute("filterType");
-	filterType = (filterType==null)?"":filterType;
 	List<Item> itemList = (List<Item>)request.getAttribute("itemList");
 	List<Integer> itemNoList = (List<Integer>)request.getAttribute("itemNoList");
 	Map<Integer, List<ItemImage>> imgMap = (Map<Integer, List<ItemImage>>)request.getAttribute("imgMap");
-	String pageBar = (String)request.getAttribute("pageBar");
 %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
 	listFilter(); //목록 정렬
 	setFilter(); //정렬값에 따라 option값 selected유지
+	console.log("${filterType}");
 });
 function listFilter(){
 	let selectFilter = document.querySelector("#filterType");
@@ -32,13 +30,13 @@ function listFilter(){
 		
 		//신상품순
 		if(optionVal==="upToDate")
-			location.href = "<%=request.getContextPath()%>/item/itemList?categoryNo=<%=categoryNo%>";
+			location.href = "${pageContext.request.contextPath}/item/itemList?categoryNo=${categoryNo}";
 		//낮은 가격순
 		else if(optionVal==="lowPrice")
-			location.href = "<%=request.getContextPath()%>/item/itemListByLowPrice?categoryNo=<%=categoryNo%>&filterType=lowPrice";
+			location.href = "${pageContext.request.contextPath}/item/itemListByLowPrice?categoryNo=${categoryNo}&filterType=lowPrice";
 		//높은 가격순
 		else if(optionVal==="highPrice")
-			location.href = "<%=request.getContextPath()%>/item/itemListByHighPrice?categoryNo=<%=categoryNo%>&filterType=highPrice";
+			location.href = "${pageContext.request.contextPath}/item/itemListByHighPrice?categoryNo=${categoryNo}&filterType=highPrice";
 	});
 }
 function setFilter(){
@@ -46,11 +44,10 @@ function setFilter(){
 	
 	options.forEach(function(obj, idx){
 		let val = obj.value;
-		if(val==="<%=filterType%>"){
+		if(val==="${filterType}"){
 			obj.selected = true;
 		}
 	});
-	
 }
 </script>
 <!-- page nav -->
@@ -110,7 +107,7 @@ function setFilter(){
 		pageContext.setAttribute("imgList", imgList);
 		pageContext.setAttribute("discountedPrice", discountedPrice);
 %>
- 		<div class="col-md-3">
+ 		 <div class="col-md-3">
 		    <a href='<c:url value="/item/itemView?categoryNo=${categoryNo}&itemNo=${item.itemNo}"/>' class="center-block">
 		        <img src="<c:url value='/images/${categoryNo}/${imgList[0].itemImageRenamed}'/>" alt="item" class="center-block">
 		        <div class="ptext-wrapper">
@@ -122,22 +119,22 @@ function setFilter(){
 		            </div>
 		        </div>
 		    </a>
-		</div>
+		</div> 
 <%			
 	}
 %>
 		<!-- 상품개수가 4의 배수가 아니면 부족한 만큼 빈 박스로 채움 -->
-		<c:if test="${fn:length(itemList)%4 != 0}">
+		 <c:if test="${fn:length(itemList)%4 != 0}">
 			<c:set var="plus" value="${4-fn:length(itemList)%4}" />
 			<c:forEach var="i" begin="1" end="${plus}" step="1">
 				<div class="col-md-3"></div>
 			</c:forEach>
-		</c:if>
+		</c:if> 
 	</div>
 	<!-- 페이징바 -->
 	<nav class="paging-bar text-center">
 	    <ol class="list-unstyled list-inline">
-	    	<%=pageBar %>
+	    	${pageBar}
 	    </ol>
 	</nav>
 </div>
@@ -150,7 +147,7 @@ function setFilter(){
 </c:if>
 
 
-<!-- 조회된 상품이 없는 경우 -->
+<%-- 조회된 상품이 없는 경우 --%>
 <c:if test="${empty itemList}">
 		</div>
 	</div>
@@ -165,4 +162,4 @@ function setFilter(){
 	</div>
 </c:if>
 
-<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+<c:import url="../common/footer.jsp"></c:import>

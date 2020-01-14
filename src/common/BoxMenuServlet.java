@@ -19,7 +19,7 @@ public class BoxMenuServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String level1 = request.getParameter("level1");
-		System.out.println(level1);
+		//System.out.println(level1);
 		
 		request.setAttribute("level1", level1);
 		request.getRequestDispatcher("/WEB-INF/views/common/boxMenu.jsp").forward(request, response);
