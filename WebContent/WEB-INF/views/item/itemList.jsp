@@ -10,7 +10,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="filterType" value='${filterType==null?"":filterType}' />
 <%
-	System.out.println();
 	List<Item> itemList = (List<Item>)request.getAttribute("itemList");
 	List<Integer> itemNoList = (List<Integer>)request.getAttribute("itemNoList");
 	Map<Integer, List<ItemImage>> imgMap = (Map<Integer, List<ItemImage>>)request.getAttribute("imgMap");
@@ -19,8 +18,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function(){
 	listFilter(); //목록 정렬
-	setFilter(); //정렬값에 따라 option값 selected유지
-	console.log("${filterType}");
 });
 function listFilter(){
 	let selectFilter = document.querySelector("#filterType");
@@ -30,23 +27,39 @@ function listFilter(){
 		let optionVal = selectFilter.options[selectFilter.selectedIndex].value;
 		
 		//신상품순
-		if(optionVal==="upToDate")
-			location.href = "${pageContext.request.contextPath}/item/itemList?categoryNo=${categoryNo}";
+		if(optionVal==="upToDate") filterAjax("upToDate");
 		//낮은 가격순
-		else if(optionVal==="lowPrice")
-			location.href = "${pageContext.request.contextPath}/item/itemListByLowPrice?categoryNo=${categoryNo}&filterType=lowPrice";
+		else if(optionVal==="lowPrice") filterAjax("lowPrice");
 		//높은 가격순
-		else if(optionVal==="highPrice")
-			location.href = "${pageContext.request.contextPath}/item/itemListByHighPrice?categoryNo=${categoryNo}&filterType=highPrice";
+		else if(optionVal==="highPrice") filterAjax("highPrice");
 	});
 }
-function setFilter(){
-	let options = document.querySelectorAll("#filterType option");
-	
-	options.forEach(function(obj, idx){
-		let val = obj.value;
-		if(val==="${filterType}"){
-			obj.selected = true;
+function filterAjax(filterType){
+	$.ajax({
+		url: "${pageContext.request.contextPath}/item/itemListAjax?categoryNo=${categoryNo}&filterType="+filterType,
+		type: "get",
+		dataType: "html",
+		success: data=>{
+			console.log(data);
+			$("#view-list").html(data);
+		}, 
+		error: (x, s, e)=>{
+			console.log("ajax처리실패!!!", x, s, e);
+		}
+	});
+}
+function pageBarAjax(cPage, filterType){
+	console.log("pageBarAjax");
+	$.ajax({
+		url: "${pageContext.request.contextPath}/item/itemListAjax?categoryNo=${categoryNo}&filterType="+filterType+"&cPage="+cPage,
+		type: "get",
+		dataType: "html",
+		success: data=>{
+			console.log(data);
+			$("#view-list").html(data);
+		}, 
+		error: (x, s, e)=>{
+			console.log("ajax처리실패!!!", x, s, e);
 		}
 	});
 }
@@ -124,7 +137,7 @@ function setFilter(){
 <%			
 	}
 %>
-		<!-- 상품개수가 4의 배수가 아니면 부족한 만큼 빈 박스로 채움 -->
+		<%-- 상품개수가 4의 배수가 아니면 부족한 만큼 빈 박스로 채움 --%>
 		 <c:if test="${fn:length(itemList)%4 != 0}">
 			<c:set var="plus" value="${4-fn:length(itemList)%4}" />
 			<c:forEach var="i" begin="1" end="${plus}" step="1">
@@ -132,7 +145,7 @@ function setFilter(){
 			</c:forEach>
 		</c:if> 
 	</div>
-	<!-- 페이징바 -->
+	<%-- 페이징바 --%>
 	<nav class="paging-bar text-center">
 	    <ol class="list-unstyled list-inline">
 	    	${pageBar}
@@ -140,7 +153,7 @@ function setFilter(){
 	</nav>
 </div>
 	    
-<!-- 맨위로 이동 버튼 -->
+<%-- 맨위로 이동 버튼 --%>
 <div id="go-to-top" class="btn-bottom">
     <button type="button" id="btn-gotop" class="center-block" onclick="window.scrollTo(0,0);">맨 위로 이동</button>
 </div>
