@@ -521,7 +521,12 @@ insert into item_image values(seq_item_image.nextval, 70, 'IMG05', 'trunkicarrie
 insert into item_qna values(seq_item_qna.nextval, 50, 'abcde', '저희 아이가 36개월인데 혹시 이거 이용하는데 문제 없을까요?', default, sysdate);
 insert into item_qna values(seq_item_qna.nextval, 50, 'kimcs', '일대일 문의에도 남겼는데요. 몇일전 렌탈을 했는데 아이가 잘 탈줄알았는데 거부를 해서요ㅜ 취소하고 다른걸로 렌탈해도 될까요? 한번타고 방치 중이에요ㅜㅜ', default, sysdate);
 insert into item_qna values(seq_item_qna.nextval, 50, 'kimyh', '어제 밤에 주문했는데 언제 도착할까요?', default, sysdate);
-
+insert into item_qna values(seq_item_qna.nextval, 50, 'kimyh', '어제 밤에 주문했는데 언제 도착할까요?2', default, sysdate);
+insert into item_qna values(seq_item_qna.nextval, 50, 'kimyh', '어제 밤에 주문했는데 언제 도착할까요?3', default, sysdate);
+insert into item_qna values(seq_item_qna.nextval, 50, 'kimyh', '어제 밤에 주문했는데 언제 도착할까요?4', default, sysdate);
+insert into item_qna values(seq_item_qna.nextval, 50, 'kimyh', '어제 밤에 주문했는데 언제 도착할까요?5', default, sysdate);
+insert into item_qna values(seq_item_qna.nextval, 50, 'kimyh', '어제 밤에 주문했는데 언제 도착할까요?6', default, sysdate);
+commit;
 --상품Q&A답변 추가
 insert into item_qna_ans values(seq_item_qna_ans.nextval, 1, 'admin', '네 괜찮습니다. 감사합니다.', sysdate);
 insert into item_qna_ans values(seq_item_qna_ans.nextval, 2, 'admin', '문의주신 단순변심으로 인한 반품은 개봉(사용)전 경우 배송완료일 포함 7일이내로 접수 가능하나 고객님께선 제품을 사용하신 경우로 반품이 어려운 점 양해 부탁드립니다.', sysdate);
@@ -681,8 +686,9 @@ insert into item_wishlist values(seq_item_wishlist.nextval,'sjun212',58,'RT03');
 commit;
 --select * from item_review;
 --select * from order_sheet;
---
---select * from item_review;
+
+select * from item where item_no = 1;
+select * from item_review;
 --select * from order_detail;
 --select * from item_rent_each;
 --select * from item_wishlist;

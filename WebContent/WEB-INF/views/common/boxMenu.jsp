@@ -16,7 +16,8 @@
 	    <li class="col-md-4 three-times"><a href="<c:url value='/item/itemList?categoryNo=CT02'/>">육아할 때</a></li>
         <li class="col-md-4"><a href="<c:url value='/item/itemList?categoryNo=CT03'/>">파티할 때</a></li>
         <li class="col-md-4"><a href="<c:url value='/item/itemList?categoryNo=CT04'/>">운동할 때</a></li>
-        <li class="col-md-4"><a href="<c:url value='/item/itemList?categoryNo=CT05'/>">캠핑갈 때</a></li>
+        <li class="col-md-4 three-times"><a href="<c:url value='/item/itemList?categoryNo=CT05'/>">여행갈 때</a></li>
+	    <li class="col-md-4"><a href="<c:url value='/item/itemList?categoryNo=CT06'/>">캠핑갈 때</a></li>
 	    <li class="col-md-4"></li>
 	    <li class="col-md-4 three-times"></li>
 	</c:if>

@@ -29,8 +29,8 @@ public class MemberLoginEndServlet extends HttpServlet {
 		//2.parameter
 				String memberId = request.getParameter("memberId");
 				String memberPwd = request.getParameter("memberPwd");
-				System.out.println("memberId="+memberId);
-				System.out.println("memberPwd="+memberPwd);
+				//System.out.println("memberId="+memberId);
+				//System.out.println("memberPwd="+memberPwd);
 				
 				//3.businessLogic
 				Member m = new MemberService().selectOne(memberId);
@@ -63,7 +63,7 @@ public class MemberLoginEndServlet extends HttpServlet {
 					else {
 						//세션이 있으면, 해당세션을 리턴하고, 없으면, 새로생성해서 리턴
 						HttpSession session = request.getSession(true);
-						System.out.println("SESSIONID="+session.getId());
+						//System.out.println("SESSIONID="+session.getId());
 						//세션에 로그인한 회원객체 속성으로 저장
 						session.setAttribute("memberLoggedIn", m);
 						

@@ -1,59 +1,42 @@
-<%@page import="item.model.vo.ItemQnaAns"%>
-<%@page import="java.util.Map"%>
-<%@page import="item.model.vo.ItemQna"%>
-<%@page import="item.model.vo.ItemImage"%>
-<%@page import="java.util.List"%>
-<%@page import="item.model.vo.Item"%>
-<%@page import="java.text.DecimalFormat"%>
+<%@page import="item.model.vo.*"%>
 <%@ page import="board.model.vo.*" %>
+<%@page import="java.util.*"%>
+<%@page import="java.text.DecimalFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="memberId" value="${memberLoggedIn!=null?memberLoggedIn.memberId:''}" />
 <%
-	String memberId = memberLoggedIn != null?memberLoggedIn.getMemberId():"";
-	String categoryNo = (String)request.getAttribute("categoryNo");
 	Item item = (Item)request.getAttribute("item");
-	List<ItemImage> imgList = (List<ItemImage>)request.getAttribute("imgList");
 	
-	List<Board> blist = (List<Board>)request.getAttribute("list"); //이용후기 리스트
-	List<ItemQna> qList = (List<ItemQna>)request.getAttribute("qList"); //qna 리스트
-	Map<Integer, ItemQnaAns> qnaMap = (Map<Integer, ItemQnaAns>)request.getAttribute("qnaMap"); //qna+답변
-	
-	String reviewPageBar = (String)request.getAttribute("reviewPageBar"); //이용후기 페이지바
-	String qnaPageBar = (String)request.getAttribute("qnaPageBar"); //qna 페이지바
-	
-	int reviewTotalContent = (int)request.getAttribute("reviewTotalContent"); //이용후기 총 게시글 수
-	int qnaTotalContent = (int)request.getAttribute("qnaTotalContent"); //qna 총 게시글 수
-	
-	//가격 콤마찍기
-	int discountedPrice7 = (int)Math.ceil((item.getItemPrice()*0.98)/240*7)/100*100; //14일기준
+	//렌탈유형: 가격
+	int discountedPrice7 = (int)Math.ceil((item.getItemPrice()*0.98)/240*7)/100*100; //7일기준
 	int discountedPrice14 = (int)Math.ceil((item.getItemPrice()*0.95)/240*14)/100*100; //14일기준
-	int discountedPrice30 = (int)Math.ceil((item.getItemPrice()*0.90)/240*30)/100*100; //14일기준
-	DecimalFormat dc = new DecimalFormat("###,###,###,###원");
-	String price7 = dc.format(discountedPrice7);
-	String price14 = dc.format(discountedPrice14);
-	String price30 = dc.format(discountedPrice30);
+	int discountedPrice30 = (int)Math.ceil((item.getItemPrice()*0.90)/240*30)/100*100; //30일기준
 	
-	//상품설명
-	String desc = item.getItemDesc();
-	String[] descArray = desc.split(",");
+	pageContext.setAttribute("price7", discountedPrice7);
+	pageContext.setAttribute("price14", discountedPrice14);
+	pageContext.setAttribute("price30", discountedPrice30);
 	
 %>
-<script src="<%=request.getContextPath()%>/js/itemView.js"></script>
+<script src="<c:url value='/js/itemView.js'/>"></script>
 <script>
 $(function(){
 	//Q&A등록하기 버튼
 	$('#btn-goQna').on('click', function(){
-		if(<%=memberLoggedIn==null%>){
+		if(${memberLoggedIn==null}){
 			goLogin();
 		}else{
-			location.href = "<%=request.getContextPath()%>/item/itemQnaForm?categoryNo=<%=categoryNo%>&itemNo=<%=item.getItemNo()%>";
+			location.href = "${pageContext.request.contextPath}/item/itemQnaForm?categoryNo=${categoryNo}&itemNo=${item.itemNo}";
 		}
 	});
 	
 	//위시리스트 버튼 눌렀을 경우: 회원아이디, 상품번호, 렌탈유형 넘기기
 	$("#btn-wishlist").on('click', function(){
-		if(<%=memberLoggedIn==null%>){
+		if(${memberLoggedIn==null}){
 			goLogin();
 		}
 		else{
@@ -63,11 +46,11 @@ $(function(){
 			let rentTypePriceVal = $("#rent-type option:selected").text(); //가격
 			console.log(rentTypeVal);
 			$.ajax({
-				url: "<%=request.getContextPath()%>/mypage/mypageWishlistInsert",
+				url: "${pageContext.request.contextPath}/mypage/mypageWishlistInsert",
 				type: "post",
 				data: {
-					memberId: "<%=memberId%>",
-					itemNo: <%=item.getItemNo()%>,
+					memberId: "${memberId}",
+					itemNo: ${item.itemNo},
 					rentType: rentTypeVal,
 					rentTypePrice: rentTypePriceVal
 				},
@@ -78,11 +61,11 @@ $(function(){
 					
 					if(result===1){
 						if(!confirm("위시리스트에 상품이 담겼습니다.\n지금 위시리스트를 확인하시겠습니까?")) return;
-						location.href = "<%=request.getContextPath()%>/mypage/mypageWishlist?memberId=<%=memberId%>";
+						location.href = "${pageContext.request.contextPath}/mypage/mypageWishlist?memberId=${memberId}";
 					}
 					else if(result===-1){
 						if(!confirm("이미 위시리스트에 존재하는 상품입니다!\n지금 위시리스트를 확인하시겠습니까?")) return;
-						location.href = "<%=request.getContextPath()%>/mypage/mypageWishlist?memberId=<%=memberId%>";
+						location.href = "${pageContext.request.contextPath}/mypage/mypageWishlist?memberId=${memberId}";
 					}
 					else{
 						alert("위시리스트에 상품담기를 실패하였습니다!");
@@ -97,7 +80,7 @@ $(function(){
 	
 	//장바구니 버튼 눌렀을 경우: 회원아이디, 상품번호, 렌탈유형, 수량 넘기기
 	$("#btn-addCart").on('click', function(){
-		if(<%=memberLoggedIn==null%>){
+		if(${memberLoggedIn==null}){
 			goLogin();
 		}
 		else{
@@ -105,11 +88,11 @@ $(function(){
 			let orderNoVal = $("#orderNo").val(); //수량
 			
 			$.ajax({
-				url: "<%=request.getContextPath()%>/member/memberCartInsert",
+				url: "${pageContext.request.contextPath}/member/memberCartInsert",
 				type: "post",
 				data: {
-					memberId: "<%=memberId%>",
-					itemNo: <%=item.getItemNo()%>,
+					memberId: "${memberId}",
+					itemNo: ${item.itemNo},
 					rentType: rentTypeVal,
 					itemQuantity: orderNoVal
 				},
@@ -119,20 +102,15 @@ $(function(){
 					
 					if(data.result===1){
 						if(!confirm("장바구니에 상품이 담겼습니다.\n지금 장바구니를 확인하시겠습니까?")) return;
-						location.href = "<%=request.getContextPath()%>/member/memberCart?memberId=<%=memberId%>";
+						location.href = "${pageContext.request.contextPath}/member/memberCart?memberId=${memberId}";
 					}
 					else if(data.count===1){
 						if(!confirm("이미 장바구니에 존재하는 상품입니다!\n지금 장바구니를 확인하시겠습니까?")) return;
-						location.href = "<%=request.getContextPath()%>/member/memberCart?memberId=<%=memberId%>";
+						location.href = "${pageContext.request.contextPath}/member/memberCart?memberId=${memberId}";
 					}
 					else if(data.stock===0){
 						alert("이 상품은 현재 품절되었습니다!");
 					}
-					//장바구니에 이미 담겨있는 현재 상품의 수량과 재고를 비교해서 할 것! 
-					/* else if(data.stock>0){
-						alert("선택가능한 상품 수보다 더 많이 선택하셨습니다!\n현재 선택가능한 상품 수는 ["+data.stock+"]입니다.");
-						orderNoVal = data.stock;
-					} */
 					else{
 						alert("장바구니에 상품담기를 실패하였습니다!");
 					}
@@ -149,11 +127,11 @@ $(function(){
 		let rentTypeVal = $("#rent-type option:selected").val();
 		let orderNo = document.querySelector("#orderNo").value;
 
-		if(<%=memberLoggedIn==null%>){
+		if(${memberLoggedIn==null}){
 			goLogin();
 		}
 		else {
-			location.href = "<%=request.getContextPath()%>/order/orderOne?memberId=<%=memberId%>&categoryNo=<%=categoryNo%>&itemNo=<%=item.getItemNo()%>&rentType="+rentTypeVal+"&ea="+orderNo;
+			location.href = "${pageContext.request.contextPath}/order/orderOne?memberId=${memberId}&categoryNo=${categoryNo}&itemNo=${item.itemNo}&rentType="+rentTypeVal+"&ea="+orderNo;
 		}
 		
 	}); 
@@ -161,10 +139,10 @@ $(function(){
 });
 function goLogin(){
 	if(!confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) return;
-	location.href = "<%=request.getContextPath()%>/member/memberLogin";
+	location.href = "${pageContext.request.contextPath}/member/memberLogin";
 }
 function changeOrderNo(num){
-	let stockStr = <%=item.getItemStock()%>; //상품 재고
+	let stockStr = ${item.itemStock}; //상품 재고
 	let inputOrderNo = document.querySelector("#orderNo");
 	let oldNo = inputOrderNo.value;
 	let newNo = (inputOrderNo.value*1)+num; //수량(정수형)
@@ -204,84 +182,64 @@ function changeOrderNo(num){
 	for(let i=0; i<newNo; i++){
 		console.log("1changeVal:"+changeVal); // 계산된 가격을 log로 찍기
 		changeVal += (RegExp_1*1); // 수량 만큼 가격을 더하기
-		//console.log("changeValAfterPlus="+changeVal);
 		totalPrice.innerText = changeVal.toLocaleString()+"원";
 	}
 	
-	//console.log("changeValAfterPlus="+changeVal);
 	totalPrice.innerText = changeVal.toLocaleString()+"원"; // 마지막에 "원" 글자를 붙이기
 	
-	//totalPrice.innerText = changeVal.toLocaleString()+"원";
 }
 </script>
-<!-- page nav -->
+
+<%-- page nav --%>
 <nav class="line-style page-nav">
     <ul class="list-unstyled list-inline">
         <li class="go-home">
-            <a href="<%=request.getContextPath()%>/index.jsp">메인</a>
+            <a href="<c:url value='/index.jsp'/>">메인</a>
             <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
         </li>
         <li class="go-boxmenu">
-            <a href="<%=request.getContextPath()%>/common/boxMenu?level1=when">이럴 때 빌려봐</a>
+            <a href="<c:url value='/common/boxMenu?level1=when'/>">이럴 때 빌려봐</a>
             <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
         </li>
-        <% 
-        	if("CT01".equals(categoryNo)){
-        %>
-        	<li><a href="<%=request.getContextPath()%>/item/itemList?categoryNo=<%=categoryNo%>">반려동물과 함께 할 때</a><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></li>
-        <%
-        	}
-        	if("CT02".equals(categoryNo)){
-        %>
-        	<li><a href="<%=request.getContextPath()%>/item/itemList?categoryNo=<%=categoryNo%>">육아할 때</a><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></li>
-        <%
-        	}
-        	if("CT03".equals(categoryNo)){
-        %>
-        	<li><a href="<%=request.getContextPath()%>/item/itemList?categoryNo=<%=categoryNo%>">파티할 때</a><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></li>
-        <%
-        	}
-        	if("CT04".equals(categoryNo)){
-        %>
-        	<li><a href="<%=request.getContextPath()%>/item/itemList?categoryNo=<%=categoryNo%>">운동할 때</a><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></li>
-        <%
-        	}
-        	if("CT05".equals(categoryNo)){
-        %>
-        	<li><a href="<%=request.getContextPath()%>/item/itemList?categoryNo=<%=categoryNo%>">여행갈 때</a><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></li>
-        <%
-        	}
-        	if("CT06".equals(categoryNo)){
-        %>
-        	<li><a href="<%=request.getContextPath()%>/item/itemList?categoryNo=<%=categoryNo%>">캠핑갈 때</a><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></li>
-        <%
-        	}
-        %>
-        <li><%=item.getItemName()%></li>
+        <c:if test='${"CT01"==categoryNo}'>
+        	<li>반려동물과 함께 할 때</li>
+        </c:if>
+        <c:if test='${"CT02"==categoryNo}'>
+        	<li>육아할 때</li>
+        </c:if>
+        <c:if test='${"CT03"==categoryNo}'>
+        	<li>파티할 때</li>
+        </c:if>
+        <c:if test='${"CT04"==categoryNo}'>
+        	<li>운동할 때</li>
+        </c:if>
+        <c:if test='${"CT05"==categoryNo}'>
+        	<li>여행갈 때</li>
+        </c:if>
+        <c:if test='${"CT06"==categoryNo}'>
+        	<li>캠핑갈 때</li>
+        </c:if>
+        <li>${item.itemName}</li>
     </ul>
 </nav>
 
 <div id="view-details" class="container-fluid contents none-nav">
-	<!-- 상단: 이미지/옵션 영역 -->
+	<%-- 상단: 이미지/옵션 영역 --%>
 	<div id="view-wrapper" class="row">
 	    <section id="view-img" class="col-md-6">
 	        <h2 class="sr-only">상품 이미지 보기</h2>
-	        <img src="<%=request.getContextPath()%>/images/<%=categoryNo%>/<%=imgList.get(0).getItemImageRenamed() %>" alt="상품 대표이미지">
-	        <%
-	        	//이미지가 2개 이상이라면(서브이미지가 있다면)
-				if(imgList.size()>2){
-					for(int i=1; i<imgList.size()-1; i++){
-	        %>
-	        			<img src="<%=request.getContextPath()%>/images/<%=categoryNo%>/<%=imgList.get(i).getItemImageRenamed() %>" alt="상품 서브이미지">
-	        <%
-					}
-	        	}
-	        %>
+	        <img src="<c:url value='/images/${categoryNo}/${imgList[0].itemImageRenamed}'/>" alt="상품 대표이미지">
+	        <%-- 이미지가 2개 이상이라면(서브이미지가 있다면): end값 -2(i<imgList.size()-1) 해야함! --%>
+	        <c:if test="${fn:length(imgList)>2}">
+	        	<c:forEach var="i" begin="1" end="${fn:length(imgList)-2}" step="1">
+	        		<img src="<c:url value='/images/${categoryNo}/${imgList[i].itemImageRenamed}'/>" alt="상품 서브이미지">
+	        	</c:forEach>
+	        </c:if>
 	    </section>            
 	    <section id="opt-wrapper" class="col-md-6">
 	        <div id="opt-header" class="row">
 	            <div class="col-md-6">
-	                <p id="total-price" class="text-center"><%=price14%></p>
+	                <p id="total-price" class="text-center"><fmt:formatNumber value="${price14}" groupingUsed="true"/>원</p>
 	            </div>
 	            <div class="col-md-6">
 	                <button type="button" id="btn-wishlist" class="center-block">
@@ -291,16 +249,16 @@ function changeOrderNo(num){
 	        </div>
 	        <section id="opt-inner">
 	            <section>
-	                <p class="pbrand"><%=item.getItemBrand()%></p>
-	                <p id="pname"><%=item.getItemName()%></p>
+	                <p class="pbrand">${item.itemBrand}</p>
+	                <p id="pname">${item.itemName}</p>
 	            </section>
 	            <section id="sel-rentType">
 	                <p>렌탈옵션</p>
 	                <label for="rent-type" class='sr-only'>렌탈옵션</label>
 	                <select name="rentType" id="rent-type">
-	                    <option value="7"><span class="rt-price"><%=price7%></span><span class="period">/일시납 7일</option>
-	                    <option value="14" selected><span class="rt-price"><%=price14%></span><span class="period">/일시납 14일</option>
-	                    <option value="30"><span class="rt-price"><%=price30%></span><span class="period">/일시납 30일</option>
+	                    <option value="7"><span class="rt-price"><fmt:formatNumber value="${price7}" groupingUsed="true"/>원</span><span class="period">/일시납 7일</option>
+	                    <option value="14" selected><span class="rt-price"><fmt:formatNumber value="${price14}" groupingUsed="true"/>원</span><span class="period">/일시납 14일</option>
+	                    <option value="30"><span class="rt-price"><fmt:formatNumber value="${price30}" groupingUsed="true"/>원</span><span class="period">/일시납 30일</option>
 	                </select>
 	            </section>
 	            <section id="sel-amount">
@@ -321,41 +279,38 @@ function changeOrderNo(num){
 	            <section id="opt-desc">
 	            	<p>제품 고시 정보</p>
 	            	<ul class="list-unstyled">
-	            	<%
-	            		for(String str: descArray){	
-	            	%>
-	            		<li><%=str%></li>
-	            	<%
-	            		}
-	            	%>
+	            	<c:forTokens items="${item.itemDesc}" delims="," var="desc">
+	            		<li>${desc}</li>
+	            	</c:forTokens>
 	            	</ul>
 	            </section>
 	        </section>
 	    </section>
 	</div>
-	<!-- 하단: 상품상세/리뷰/qna 영역 -->
+	<%-- 하단: 상품상세/리뷰/qna 영역 --%>
 	<div id="details-wrapper">
 	    <section class="details-tab">
 	        <ul class="list-unstyled list-inline row">
 	            <li class="col-md-3 active"><button type="button" onclick="showContent(this, 'details-img')">상품상세</button></li>
 	            <li class="col-md-3"><button type="button" onclick="showContent(this, 'details-infoShip');">배송/반품</button></li>
-	            <li class="col-md-3"><button type="button" onclick="showContent(this, 'details-review');">이용후기(<span class="board-cnt"><%=reviewTotalContent %></span>)</button></li>
-	            <li class="col-md-3"><button type="button" onclick="showContent(this, 'details-qna');">상품Q&A(<span class="board-cnt"><%=qnaTotalContent %></span>)</button></li>
+	            <li class="col-md-3"><button type="button" onclick="showContent(this, 'details-review');">이용후기(<span class="board-cnt">${reviewTotalContent}</span>)</button></li>
+	            <li class="col-md-3"><button type="button" onclick="showContent(this, 'details-qna');">상품Q&A(<span class="board-cnt">${qnaTotalContent}</span>)</button></li>
 	        </ul>
 	    </section>
 	    <div class="details-contents row">
 	        <div class="col-md-1"></div>
 	        <div class="col-md-10 dc-inner">
-	            <!-- 상품상세 -->
+	            <%-- 상품상세 --%>
 	            <section id="details-img" class="active">
 	                <h3 class="sr-only">상품상세이미지</h3>
-	                <img src="<%=request.getContextPath()%>/images/<%=categoryNo%>/<%=imgList.get(imgList.size()-1).getItemImageRenamed()%>" alt="상품정보이미지">
+	                <img src="<c:url value='/images/${categoryNo}/${imgList[fn:length(imgList)-1].itemImageRenamed}'/>" alt="상품정보이미지">
+	                <%-- <img src="<c:url value='/images/${categoryNo}/${imgList[fn:length(imgList)-1].itemImageRenamed}<%=imgList.get(imgList.size()-1).getItemImageRenamed()%>'/>" alt="상품정보이미지"> --%>
 	            </section>
-	            <!-- 배송반품 -->
+	            <%-- 배송반품 --%>
                 <section id="details-infoShip" class="center-block">
                     <div class="info-ship">
                         <h3 class="sr-only">배송안내</h3>
-                        <img src="<%=request.getContextPath()%>/images/info_ship.JPG" alt="배송안내 사진">
+                        <img src="<c:url value='/images/info_ship.JPG'/>" alt="배송안내 사진">
                         <ul class="list-unstyled">
                             <li>-주문한 상품은 배송준비 단계 이후에는 주문취소가 불가 합니다.(이후부터는 반품/교환 신청만 가능합니다.)</li>
                             <li>-렌탈 상품의 경우 창고 출고 과정을 동영상 서비스로 제공하고 있습니다.</li>
@@ -365,7 +320,7 @@ function changeOrderNo(num){
                     </div>
                     <div class="info-back">
                         <h3 class="sr-only">회수안내</h3>
-                        <img src="<%=request.getContextPath()%>/images/info_back.JPG" alt="회수안내 사진">
+                        <img src="<c:url value='/images/info_back.JPG'/>" alt="회수안내 사진">
                         <ul class="list-unstyled">
                             <li>-보증금은 계약 종료 후 반환 됩니다. 상품의 훼손/구성품 분실 시 정비비가 발생될 수 있으며, 보증금에서 차감후 지급됩니다.</li>
                             <li>-회수된 상품의 검수 과정을 마이페이지에서 동영상으로 확인할 수 있습니다.</li>
@@ -380,7 +335,7 @@ function changeOrderNo(num){
                     </div>
                     <div class="info-return">
                         <h3 class="sr-only">교환/반품안내</h3>
-                        <img src="<%=request.getContextPath()%>/images/info_return.JPG" alt="교환반품안내 사진">
+                        <img src="<c:url value='/images/info_return.JPG'/>" alt="교환반품안내 사진">
                         <p class="strong">교환/ 반품 안내</p>
                         <ul class="list-unstyled">
                             <li>-교환/반품 신청은 "마이페이지-계약중인 렌탈-계약 상세 정보"에서 계약건 별로 신청 가능 합니다.</li>
@@ -396,74 +351,60 @@ function changeOrderNo(num){
                         </ul>
                     </div>
                 </section>
-	            <!-- 이용후기 -->
+	            <%-- 이용후기 --%>
 	            <section id="details-review">
-	           		<%
-	                  if(blist!=null && !blist.isEmpty()){
-	                %>
+	            	<%-- 작성된 이용후기가 있는 경우 --%>
+	                <c:if test="${list!=null && !empty list}">
 	                <section id="writed-review" class="list-wrapper">
 	                    <h3 class="sr-only">이용후기 리스트</h3>
 	                    <ul class="list-unstyled wishlist-inner">
-				           <% 
-				               int c=0;
-				              
-				               for(Board b : blist){ 
-				            	   c++;
-				            	   if(b.getItem_no()==item.getItemNo()){
-			               %>
+			                <c:forEach items="${list}" var="b">
 	                        <li>
 	                            <section class="dtReview-header row">
 	                                <div class="star col-md-2">
-										<% for(int i=0; i<b.getReview_star(); i++){ %>
-		                                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-		    							<%} %>	                                
+										<c:forEach var="i" begin="1" end="${b.review_star}" step="1">
+		                                	<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+		                                </c:forEach>
 		    						</div>
 		    						<div class="review-content col-md-7">
-	                                    <p><%=b.getReview_content() %></p>
+	                                    <p>${b.review_content}</p>
 	                                </div>
 	                                <div class="review-info col-md-2">
-	                                    <span class="review-writer"><%=b.getReview_writer() %></span>
+	                                    <span class="review-writer">${b.review_writer}</span>
 	                                    <span class="review-slash"> | </span>
-	                                    <span class="review-date"><%=b.getReview_date() %></span>
+	                                    <span class="review-date">${b.review_date}</span>
 	                                </div>
 	                            </section>
 	                        </li>
-	                   	 <% } %>
-	                    <% } %>
+	                        </c:forEach>
 	                    </ul>
 	                </section>
-	                <!-- 페이징바 -->
+	                <%-- 페이징바 --%>
 	                <nav class="paging-bar text-center">
 	                    <ol class="list-unstyled list-inline">
-							<%=reviewPageBar %>
+							${reviewPageBar}
 	                    </ol>
 	                </nav>
-	                <%
-			        	} //end of if(글이 존재할 때)
-			        	//등록된 글 없을때
-			        	else{
-			        %>
+	                </c:if>
+	                <%-- 작성된 이용후기가 없는 경우 --%>
+	                <c:if test="${list==null || empty list}">
 			        	<div id="warning-wrapper" class="content-wrapper text-center">
 							<p><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>등록된 이용후기가 없습니다.</p> 
 						</div>
-			        <% } %>
+			        </c:if>
 	            </section>
-	            <!-- 상품QNA -->
+	            <%-- 상품QNA --%>
 	            <section id="details-qna">
 	                <div class="btn-wrapper">
-		                <!--관리자로 로그인시 문의하기 버튼 안 뜨게 설정-->
-		                <%if(memberLoggedIn!=null && "admin".equals(memberLoggedIn.getMemberId())){ %>
-		                <%} 
-		                else{
-		                %>
-		                    <button type="button" id="btn-goQna" class="btn-radius pull-right">문의하기</button>
-		                <%} %>
+		            <%--관리자로 로그인시 문의하기 버튼 안 뜨게 설정--%>
+		            <c:if test="${'admin' ne memberLoggedIn.memberId}">
+		            	<button type="button" id="btn-goQna" class="btn-radius pull-right">문의하기</button>
+		            </c:if>
 	                </div>
 	                <section id="point-list" class="list-wrapper">
 	                    <h3 class="sr-only">문의내역 리스트</h3>
-	                    <%
-	                       if(qList!=null && !qList.isEmpty()){
-	                     %>
+	                    <%-- 작성된 상품문의가 있는 경우 --%>
+	                    <c:if test="${qList!=null && !empty qList}">
 	                    <table class="text-center list-tbl">
 	                        <thead>
 	                            <tr class="row">
@@ -474,90 +415,66 @@ function changeOrderNo(num){
 	                            </tr>
 	                        </thead>
 	                        <tbody>
-	                        <%
-	                        		for(ItemQna q: qList){
-	                        %>
+	                        <c:forEach items="${qList}" var="q">
 	                            <tr class="row qna-header">
 	                                <td class="col-md-6 qna-title">
-	                                    <button type="button" class="center-block"><%=q.getItemQnaContent() %></button>
+	                                    <button type="button" class="center-block">${q.itemQnaContent}</button>
 	                                </td>
-	                                <%
-	                                	if("Y".equals(q.getItemQnaAnsYn())){
-	                                %>
-	                                		<td class="col-md-2">답변완료</td>
-	                                <%
-	                                	}
-	                                	else{
-	                                %>
-	                                		<td class="col-md-2">답변대기</td>
-	                                <%
-	                                	}
-	                                %>
-	                                <td class="col-md-2"><%=q.getMemberId() %></td>
-	                                <td class="col-md-2"><%=q.getItemQnaDate() %></td>
+	                                <c:if test="${'Y' eq q.itemQnaAnsYn}">
+	                                	<td class="col-md-2">답변완료</td>
+	                                </c:if>
+	                                <c:if test="${'N' eq q.itemQnaAnsYn}">
+	                                	<td class="col-md-2">답변대기</td>
+	                                </c:if>
+	                                <td class="col-md-2">${q.memberId}</td>
+	                                <td class="col-md-2">${q.itemQnaDate}</td>
 	                            </tr>
 	                            <tr class="row qna-view">
 	                                <td colspan="4" class="col-md-12">
 	                                    <div class="q-wrapper">
 	                                        <span class="q-title strong">Q.</span>
-	                                        <p class="center-block"><%=q.getItemQnaContent() %></p>
+	                                        <p class="center-block">${q.itemQnaContent}</p>
 	                                    </div>
 	                                    <div class="q-wrapper">
 	                                        <span class="q-title strong">A.</span>
-	                                        <%
-			                                	if("Y".equals(q.getItemQnaAnsYn())){
-			                                %>
-			                                		<p class="center-block"><%=qnaMap.get(q.getItemQnaNo()).getItemQnaAnsContent() %></p>
-			                                <%
-			                                	}
-	                                        
-	                                        	/*관리자일 경우 답변대기중일때 답변등록창 뜨게 설정*/
-			                                	else if(memberLoggedIn!=null && "admin".equals(memberLoggedIn.getMemberId())){
-			                                %>
-			                         
-			                                	<form action="<%=request.getContextPath()%>/admin/item/qnaAnsInsert?categoryNo=<%=categoryNo%>&itemNo=<%=item.getItemNo()%>" 
+	                                        <%-- 답변이 있을 땐 답변 띄우기 --%>
+	                                        <c:if test="${'Y' eq q.itemQnaAnsYn}">
+			                                	<p class="center-block">${qnaMap[q.itemQnaNo].itemQnaAnsContent}</p>
+			                                </c:if>
+			                                <%-- 답변이 없고, 로그인한 회원이 관리자인 경우 답변등록창 뜨게 하기 --%>
+			                                <c:if test="${'N' eq q.itemQnaAnsYn && memberLoggedIn!=null && 'admin' eq memberLoggedIn.memberId}">
+			                                	<form action="<c:url value='/admin/item/qnaAnsInsert?categoryNo=${categoryNo}&itemNo=${item.itemNo}'/>" 
 			                                		method="post" name="itemQnaCommentFrm">
-			                                		<input type="hidden" name="itemQnaNo" value="<%=q.getItemQnaNo()%>" />
+			                                		<input type="hidden" name="itemQnaNo" value="${q.itemQnaNo}" />
 			                                		<input type="text" name="itemQnaAnsContent" placeholder="상품 QnA 답변" size="80px;"/>
 			                                		<button type="submit" id="btn-ansQna" class="btn-radius">등록</button>
 			                                	</form>	
-				                                		
-			                                		
-			                                <% 	
-			                                	}
-	                                        	/*관리자가 아닐시 답변대기중 메세지만 뜨게 설정 */
-			                                	else{
-			                                %>
-			                                		<p class="center-block">답변대기 중입니다.</p>
-			                                <%  
-			                                	}
-	                                        %>	
-			                                	
+				                            </c:if>    		
+			                                <%-- 답변이 없고, 로그인한 회원이 일반회원인 경우 답변대기중 메세지 뜨게 하기--%>		
+			                                <c:if test="${'N' eq q.itemQnaAnsYn && memberLoggedIn!=null && 'admin' ne memberLoggedIn.memberId}">
+			                                	<p class="center-block">답변대기 중입니다.</p>
+			                                </c:if>
 	                                    </div>
 	                                </td>
 	                            </tr>
-	                        <%
-		                        	}
-	                        %>
+	                        </c:forEach>
 	                        </tbody>
 	                    </table>
 	                </section> 
 	                <!-- 페이징바 -->
 	                <nav class="paging-bar text-center">
 	                    <ol class="list-unstyled list-inline">
-	                        <%=qnaPageBar %>
+	                        ${qnaPageBar}
 	                    </ol>
 	                </nav>
 	            </section>
-	        <%
-	        	} //end of if(글이 존재할 때)
-	        	//등록된 글이 없을때
-	        	else{
-	        %>
+	        </c:if>
+	        <%-- 작성된 상품문의가 없는 경우 --%>
+	        <c:if test="${qList==null && empty qList}">
 	        	<div id="warning-wrapper" class="content-wrapper table-warning text-center">
 					<p><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>등록된 상품Q&A가 없습니다.</p> 
 				</div>
-	        <% } %>
+	        </c:if>
 	        </div>
 	        <div class="col-md-1"></div>
 	    </div>
@@ -565,9 +482,9 @@ function changeOrderNo(num){
 </div>
 
 
-<!-- 맨위로 이동 버튼 -->
+<%-- 맨위로 이동 버튼 --%>
 <div id="go-to-top" class="btn-bottom">
     <button type="button" id="btn-gotop" class="center-block" onclick="window.scrollTo(0,0);">맨 위로 이동</button>
 </div>
 
-<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+<c:import url="../common/footer.jsp"></c:import>
